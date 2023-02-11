@@ -18,6 +18,7 @@ public class TodosDao {
   public List<Todo> findAll() {
     String query = """
         SELECT
+          t.id,
           t.name
         FROM
           todos AS t
@@ -25,7 +26,9 @@ public class TodosDao {
 
     List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
 
-    return result.stream().map((Map<String, Object> row) -> new Todo(row.get("name").toString()))
+    return result.stream()
+        .map((Map<String, Object> row) -> new Todo(Integer.parseInt(row.get("id").toString()),
+            row.get("name").toString()))
         .toList();
   }
 }

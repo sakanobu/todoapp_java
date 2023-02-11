@@ -1,9 +1,11 @@
 package com.example.sakanobu.todoapp;
 
 public class Todo {
+  private int id;
   private String name;
 
-  public Todo(String name) {
+  public Todo(int id, String name) {
+    this.id = id;
     this.name = name;
   }
 
