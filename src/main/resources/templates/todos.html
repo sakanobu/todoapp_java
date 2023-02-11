@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Todoapp_Java</title>
+    </head>
+    <body>
+        <h1>Todoapp_Java</h1>
+        <div>
+            <h2>Todo一覧</h2>
+            <div th:each="todo : ${allTodos}">
+                <div th:text="${todo.getName}"></div>
+            </div>
+        </div>
+    </body>
+</html>
