@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/todos")
 public class TasksController {
   private final TasksDao tasksDao;
 
@@ -15,7 +17,7 @@ public class TasksController {
     this.tasksDao = tasksDao;
   }
 
-  @GetMapping("/todos")
+  @GetMapping
   public String listTodos(Model model) {
     List<Task> allTasks = tasksDao.findAll();
     model.addAttribute("allTasks", allTasks);
