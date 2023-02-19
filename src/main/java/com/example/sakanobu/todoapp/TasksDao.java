@@ -37,4 +37,14 @@ public class TasksDao {
             Timestamp.valueOf(row.get("updated_at").toString())))
         .toList();
   }
+
+  public void create(String title) {
+    String query = """
+        INSERT INTO
+          tasks (title)
+        VALUES
+          (?);
+        """;
+    jdbcTemplate.update(query, title);
+  }
 }
