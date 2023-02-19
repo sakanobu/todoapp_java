@@ -7,18 +7,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class TodosController {
-  private final TodosDao todosDao;
+public class TasksController {
+  private final TasksDao tasksDao;
 
   @Autowired
-  public TodosController(TodosDao todosDao) {
-    this.todosDao = todosDao;
+  public TasksController(TasksDao tasksDao) {
+    this.tasksDao = tasksDao;
   }
 
   @GetMapping("/todos")
   public String listTodos(Model model) {
-    List<Todo> allTodos = todosDao.findAll();
-    model.addAttribute("allTodos", allTodos);
+    List<Task> allTasks = tasksDao.findAll();
+    model.addAttribute("allTasks", allTasks);
     return "todos";
   }
 }
