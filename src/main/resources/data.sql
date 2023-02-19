@@ -1,13 +1,11 @@
--- todos table
+-- tasks table
 DELETE FROM
-  todoapp_java_db.todos;
+  todoapp_java_db.tasks;
 
 INSERT INTO
-  todoapp_java_db.todos (id, name)
+  todoapp_java_db.tasks (title, status)
 VALUES
-  (1, "name1"),
-  (2, "name2"),
-  (3, "name3"),
-  (4, "name4"),
-  (5, "name5"),
-  (6, "name6");
+  ("散歩", "FINISHED"),
+  ("買い物", "UNFINISHED"),
+  ("アニメ", "FINISHED"),
+  ("買い物(アニメ)", "UNFINISHED");

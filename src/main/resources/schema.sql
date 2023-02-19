@@ -1,8 +1,11 @@
--- todos table
-DROP TABLE IF EXISTS todoapp_java_db.todos;
+-- tasks table
+DROP TABLE IF EXISTS todoapp_java_db.tasks;
 
-CREATE TABLE IF NOT EXISTS todoapp_java_db.todos (
+CREATE TABLE IF NOT EXISTS todoapp_java_db.tasks (
   id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR (256) NOT NULL,
+  title VARCHAR (256) NOT NULL,
+  status ENUM("FINISHED", "UNFINISHED") NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 );
