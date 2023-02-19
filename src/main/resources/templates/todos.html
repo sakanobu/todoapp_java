@@ -22,5 +22,11 @@
                 <div th:text="|${task.getId}, ${task.getTitle}, ${task.getStatus}, ${task.getCreatedAt}, ${task.getUpdatedAt}|"></div>
             </div>
         </div>
+        <div>
+            <h2>※デバッグ用 ToDo一覧</h2>
+            <div th:each="task : ${allTasks}">
+                <div th:text="|${task.getId}, ${task.getTitle}, ${task.getStatus}, ${task.getCreatedAt}, ${task.getUpdatedAt}|"></div>
+            </div>
+        </div>
     </body>
 </html>
