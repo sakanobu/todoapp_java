@@ -3,13 +3,13 @@ package com.example.sakanobu.todoapp;
 import java.sql.Timestamp;
 
 public class Task {
-  private int id;
+  private String id;
   private String title;
   private String status;
   private Timestamp createdAt;
   private Timestamp updatedAt;
 
-  public Task(int id, String title, String status, Timestamp createdAt, Timestamp updatedAt) {
+  public Task(String id, String title, String status, Timestamp createdAt, Timestamp updatedAt) {
     this.id = id;
     this.title = title;
     this.status = status;
@@ -17,11 +17,11 @@ public class Task {
     this.updatedAt = updatedAt;
   }
 
-  public int getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(String id) {
     this.id = id;
   }
 

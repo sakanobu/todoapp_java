@@ -1,6 +1,8 @@
 package com.example.sakanobu.todoapp;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +30,11 @@ public class TasksController {
 
   @PostMapping
   public String createTodo(@RequestParam("title") String title) {
-    tasksDao.createByString(title);
+    String id = UUID.randomUUID().toString();
+    Task task = new Task(id, title, "UNFINISHED", new Timestamp(System.currentTimeMillis()),
+        new Timestamp(System.currentTimeMillis()));
+    tasksDao.create(task);
+    // tasksDao.createByString(title);
     return "redirect:/todos";
   }
 }
