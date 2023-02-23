@@ -6,52 +6,54 @@
     </head>
     <body>
         <h1>Todoapp_Java</h1>
-        <div>
-            <h2>
-                ToDoの追加
-            </h2>
-            <form th:action="@{/todos}" method="post">
-                <label for="title">ToDo</label>
-                <input type="text" id="title" name="title">
-                <button type="submit">登録</button>
-            </form>
-        </div>
-        <div>
-            <h2>ToDo一覧</h2>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>
-                            ToDo
-                        </th>
-                        <th>
-                            ステータス
-                        </th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="task : ${allTasks}" th:object="${task}">
-                        <td th:text="*{getTitle}"></td>
-                        <td th:text="*{getStatus}"></td>
-                        <td>
+
+        <h2>
+            ToDoの追加
+        </h2>
+
+        <form th:action="@{/todos}" method="post">
+            <label for="title">ToDo</label>
+            <input type="text" id="title" name="title">
+            <button type="submit">登録</button>
+        </form>
+
+        <h2>ToDo一覧</h2>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>
+                        ToDo
+                    </th>
+                    <th>
+                        ステータス
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="task : ${allTasks}" th:object="${task}">
+                    <td th:text="*{getTitle}"></td>
+                    <td th:text="*{getStatus}"></td>
+                    <td>
+                        <form th:action="@{/todos/{id}/edit(id=*{getId})}" th:method="get">
                             <button type="submit">更新</button>
-                        </td>
-                        <td>
-                            <form th:action="@{/todos/{id}(id=*{getId})}" th:method="delete">
-                                <button type="submit">削除</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div>
-            <h2>※デバッグ用 ToDo一覧</h2>
-            <div th:each="task : ${allTasks}" th:object="${task}">
-                <div th:text="|*{getId}, *{getTitle}, *{getStatus}, *{getCreatedAt}, *{getUpdatedAt}|"></div>
-            </div>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/todos/{id}(id=*{getId})}" th:method="delete">
+                            <button type="submit">削除</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>※デバッグ用 ToDo一覧</h2>
+
+        <div th:each="task : ${allTasks}" th:object="${task}">
+            <div th:text="|*{getId}, *{getTitle}, *{getStatus}, *{getCreatedAt}, *{getUpdatedAt}|"></div>
         </div>
     </body>
 </html>
