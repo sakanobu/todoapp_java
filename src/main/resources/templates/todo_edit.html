@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Todoapp_Java</title>
+    </head>
+    <body>
+        <h1>Todoapp_Java</h1>
+
+        <h2>ToDoの更新</h2>
+
+        <form th:object="${task}" th:action="@{/todos/{id}(id=*{getId})}" th:method="put">
+            <label for="title">ToDo名</label>
+            <input type="text" id="title" name="title" th:value="*{getTitle}">
+            <label for="status">状態</label>
+            <select id="status" name="status">
+                <option th:each="status : ${statusList}" th:value="${status}"
+                        th:selected="${status == task.getStatus}" th:text="${status}"></option>
+            </select>
+            <button type="submit">更新</button>
+        </form>
+
+        <form th:action="@{/todos}" th:method="get">
+            <button type="submit">戻る</button>
+        </form>
+
+        <br>
+
+        <h2>※デバッグ用 ToDo</h2>
+
+        <div th:object="${task}"
+             th:text="|*{getId}, *{getTitle}, *{getStatus}, *{getCreatedAt}, *{getUpdatedAt}|">
+        </div>
+    </body>
+</html>

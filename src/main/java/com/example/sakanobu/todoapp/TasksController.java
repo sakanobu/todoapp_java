@@ -40,6 +40,15 @@ public class TasksController {
     return "redirect:/todos";
   }
 
+  @GetMapping("/{id}/edit")
+  public String editTodoForm(@PathVariable("id") String id, Model model) {
+    Task task = tasksDao.findById(id);
+    List<String> statusList = List.of("UNFINISHED", "FINISHED");
+    model.addAttribute("task", task);
+    model.addAttribute("statusList", statusList);
+    return "todo_edit";
+  }
+
   @DeleteMapping("/{id}")
   public String deleteTodo(@PathVariable("id") String id) {
     tasksDao.delete(id);
