@@ -28,7 +28,7 @@ public class TasksController {
 
   @PostMapping
   public String createTodo(@RequestParam("title") String title) {
-    tasksDao.create(title);
+    tasksDao.createByString(title);
     return "redirect:/todos";
   }
 }

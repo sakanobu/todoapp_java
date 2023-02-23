@@ -38,7 +38,7 @@ public class TasksDao {
         .toList();
   }
 
-  public void create(String title) {
+  public void createByString(String title) {
     String query = """
         INSERT INTO
           tasks (title)
