@@ -17,15 +17,38 @@
             </form>
         </div>
         <div>
-            <h2>Todo一覧</h2>
-            <div th:each="task : ${allTasks}">
-                <div th:text="|${task.getId}, ${task.getTitle}, ${task.getStatus}, ${task.getCreatedAt}, ${task.getUpdatedAt}|"></div>
-            </div>
+            <h2>ToDo一覧</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>
+                            ToDo
+                        </th>
+                        <th>
+                            ステータス
+                        </th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="task : ${allTasks}" th:object="${task}">
+                        <td th:text="*{getTitle}"></td>
+                        <td th:text="*{getStatus}"></td>
+                        <td>
+                            <button type="submit">更新</button>
+                        </td>
+                        <td>
+                            <button type="submit">削除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div>
             <h2>※デバッグ用 ToDo一覧</h2>
-            <div th:each="task : ${allTasks}">
-                <div th:text="|${task.getId}, ${task.getTitle}, ${task.getStatus}, ${task.getCreatedAt}, ${task.getUpdatedAt}|"></div>
+            <div th:each="task : ${allTasks}" th:object="${task}">
+                <div th:text="|*{getId}, *{getTitle}, *{getStatus}, *{getCreatedAt}, *{getUpdatedAt}|"></div>
             </div>
         </div>
     </body>
