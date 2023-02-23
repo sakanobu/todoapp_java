@@ -24,14 +24,14 @@ public class TasksController {
   }
 
   @GetMapping
-  public String listTodos(Model model) {
+  public String listTasks(Model model) {
     List<Task> allTasks = tasksDao.findAll();
     model.addAttribute("allTasks", allTasks);
     return "todos";
   }
 
   @PostMapping
-  public String createTodo(@RequestParam("title") String title) {
+  public String createTask(@RequestParam("title") String title) {
     String id = UUID.randomUUID().toString();
     Task task = new Task(id, title, "UNFINISHED", new Timestamp(System.currentTimeMillis()),
         new Timestamp(System.currentTimeMillis()));
@@ -41,7 +41,7 @@ public class TasksController {
   }
 
   @GetMapping("/{id}/edit")
-  public String editTodoForm(@PathVariable("id") String id, Model model) {
+  public String editTaskForm(@PathVariable("id") String id, Model model) {
     Task task = tasksDao.findById(id);
     List<String> statusList = List.of("UNFINISHED", "FINISHED");
     model.addAttribute("task", task);
@@ -50,7 +50,7 @@ public class TasksController {
   }
 
   @DeleteMapping("/{id}")
-  public String deleteTodo(@PathVariable("id") String id) {
+  public String deleteTask(@PathVariable("id") String id) {
     tasksDao.delete(id);
     return "redirect:/todos";
   }
