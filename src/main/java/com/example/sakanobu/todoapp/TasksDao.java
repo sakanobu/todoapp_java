@@ -41,6 +41,28 @@ public class TasksDao {
         .toList();
   }
 
+  public Task findById(String id) {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        WHERE
+          t.id = ?
+        """;
+
+    Map<String, Object> targetTask = jdbcTemplate.queryForMap(query, id);
+
+    return new Task(targetTask.get("id").toString(),
+        targetTask.get("title").toString(), targetTask.get("status").toString(),
+        Timestamp.valueOf(targetTask.get("created_at").toString()),
+        Timestamp.valueOf(targetTask.get("updated_at").toString()));
+  }
+
   public void create(Task task) {
     SqlParameterSource param = new BeanPropertySqlParameterSource(task);
     SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate).withTableName("tasks");
