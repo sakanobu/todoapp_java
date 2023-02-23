@@ -57,4 +57,14 @@ public class TasksDao {
         """;
     jdbcTemplate.update(query, title);
   }
+
+  public void delete(String id) {
+    String query = """
+        DELETE FROM
+          tasks
+        WHERE
+          id = ?
+        """;
+    jdbcTemplate.update(query, id);
+  }
 }

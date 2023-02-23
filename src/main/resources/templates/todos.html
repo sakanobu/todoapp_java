@@ -10,7 +10,7 @@
             <h2>
                 ToDoの追加
             </h2>
-            <form th:action="@{/todos}" method="POST">
+            <form th:action="@{/todos}" method="post">
                 <label for="title">ToDo</label>
                 <input type="text" id="title" name="title">
                 <button type="submit">登録</button>
@@ -39,7 +39,9 @@
                             <button type="submit">更新</button>
                         </td>
                         <td>
-                            <button type="submit">削除</button>
+                            <form th:action="@{/todos/{id}(id=*{getId})}" th:method="delete">
+                                <button type="submit">削除</button>
+                            </form>
                         </td>
                     </tr>
                 </tbody>
