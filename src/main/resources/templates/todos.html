@@ -10,7 +10,7 @@
             <h2>
                 ToDoの追加
             </h2>
-            <form action="todos" method="POST">
+            <form th:action="@{/todos}" method="POST">
                 <label for="title">ToDo</label>
                 <input type="text" id="title" name="title">
                 <button type="submit">登録</button>
