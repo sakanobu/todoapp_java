@@ -34,15 +34,15 @@
             </thead>
             <tbody>
                 <tr th:each="task : ${allTasks}" th:object="${task}">
-                    <td th:text="*{getTitle}"></td>
-                    <td th:text="*{getStatus}"></td>
+                    <td th:text="*{title}"></td>
+                    <td th:text="*{status}"></td>
                     <td>
-                        <form th:action="@{/todos/{id}/edit(id=*{getId})}" th:method="get">
+                        <form th:action="@{/todos/{id}/edit(id=*{id})}" th:method="get">
                             <button type="submit">更新</button>
                         </form>
                     </td>
                     <td>
-                        <form th:action="@{/todos/{id}(id=*{getId})}" th:method="delete">
+                        <form th:action="@{/todos/{id}(id=*{id})}" th:method="delete">
                             <button type="submit">削除</button>
                         </form>
                     </td>
@@ -53,7 +53,7 @@
         <h2>※デバッグ用 ToDo一覧</h2>
 
         <div th:each="task : ${allTasks}" th:object="${task}">
-            <div th:text="|*{getId}, *{getTitle}, *{getStatus}, *{getCreatedAt}, *{getUpdatedAt}|"></div>
+            <div th:text="|*{id}, *{title}, *{status}, *{createdAt}, *{updatedAt}|"></div>
         </div>
     </body>
 </html>

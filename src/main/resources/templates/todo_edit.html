@@ -9,13 +9,13 @@
 
         <h2>ToDoの更新</h2>
 
-        <form th:object="${task}" th:action="@{/todos/{id}(id=*{getId})}" th:method="put">
+        <form th:object="${task}" th:action="@{/todos/{id}(id=*{id})}" th:method="put">
             <label for="title">ToDo名</label>
-            <input type="text" id="title" name="title" th:value="*{getTitle}">
+            <input type="text" id="title" name="title" th:value="*{title}">
             <label for="status">状態</label>
             <select id="status" name="status">
                 <option th:each="status : ${statusList}" th:value="${status}"
-                        th:selected="${status == task.getStatus}" th:text="${status}"></option>
+                        th:selected="${status == task.status}" th:text="${status}"></option>
             </select>
             <button type="submit">更新</button>
         </form>
@@ -29,7 +29,7 @@
         <h2>※デバッグ用 ToDo</h2>
 
         <div th:object="${task}"
-             th:text="|*{getId}, *{getTitle}, *{getStatus}, *{getCreatedAt}, *{getUpdatedAt}|">
+             th:text="|*{id}, *{title}, *{status}, *{createdAt}, *{updatedAt}|">
         </div>
     </body>
 </html>
