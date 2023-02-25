@@ -51,11 +51,11 @@ public class TasksController {
   }
 
   @PutMapping("/{id}")
-  public String updaateTask(@Validated Task requestTask,
-                            BindingResult bindingResult,
-                            @PathVariable("id") String id, @RequestParam("title") String title,
-                            @RequestParam("status") String status,
-                            @RequestParam("createdAt") LocalDateTime createdAt, Model model) {
+  public String updateTask(@Validated Task requestTask,
+                           BindingResult bindingResult,
+                           @PathVariable("id") String id, @RequestParam("title") String title,
+                           @RequestParam("status") String status,
+                           @RequestParam("createdAt") LocalDateTime createdAt, Model model) {
     if (bindingResult.hasErrors()) {
       List<String> statusList = List.of("UNFINISHED", "FINISHED");
       model.addAttribute("task", requestTask);
