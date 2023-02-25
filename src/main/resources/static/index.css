@@ -1,0 +1,11 @@
+table {
+  table-layout: fixed;
+}
+
+th {
+  width: 100px;
+}
+
+td {
+  text-align: center;
+}

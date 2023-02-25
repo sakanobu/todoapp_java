@@ -3,13 +3,12 @@
     <head>
         <meta charset="UTF-8">
         <title>Todoapp_Java</title>
+        <link th:href="@{index.css}" rel="stylesheet">
     </head>
     <body>
         <h1>Todoapp_Java</h1>
 
-        <h2>
-            ToDoの追加
-        </h2>
+        <h2> ToDoの追加 </h2>
 
         <form th:object="${inputTask}" th:action="@{/todos}" th:method="post">
 
@@ -35,6 +34,12 @@
                     <th>
                         ステータス
                     </th>
+                    <th>
+                        作成日
+                    </th>
+                    <th>
+                        更新日
+                    </th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -43,6 +48,8 @@
                 <tr th:each="task : ${allTasks}" th:object="${task}">
                     <td th:text="*{title}"></td>
                     <td th:text="*{status}"></td>
+                    <td th:text="${#temporals.format(task.getCreatedAt, 'yyyy/MM/dd HH:mm')}"></td>
+                    <td th:text="${#temporals.format(task.getUpdatedAt, 'yyyy/MM/dd HH:mm')}"></td>
                     <td>
                         <form th:action="@{/todos/{id}/edit(id=*{id})}" th:method="get">
                             <button type="submit">更新</button>
