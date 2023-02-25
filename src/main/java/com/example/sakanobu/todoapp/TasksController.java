@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,13 +29,26 @@ public class TasksController {
 
   @GetMapping
   public String listTasks(Model model) {
+    Task inputTask = new Task("", "", "", LocalDateTime.now(), LocalDateTime.now());
     List<Task> allTasks = tasksDao.findAll();
+    model.addAttribute("inputTask", inputTask);
     model.addAttribute("allTasks", allTasks);
     return "todos";
   }
 
   @PostMapping
-  public String createTask(@RequestParam("title") String title) {
+  public String createTask(@Validated Task inputTask, BindingResult bindingResult,
+                           @RequestParam("title") String title, Model model) {
+    if (bindingResult.hasErrors()) {
+      List<String> errorList = bindingResult.getAllErrors().stream().map(
+          DefaultMessageSourceResolvable::getDefaultMessage).toList();
+      List<Task> allTasks = tasksDao.findAll();
+      model.addAttribute("allTasks", allTasks);
+      model.addAttribute("inputTask", inputTask);
+      model.addAttribute("errorList", errorList);
+      return "todos";
+    }
+
     String id = UUID.randomUUID().toString();
     Task task = new Task(id, title, "UNFINISHED", LocalDateTime.now(), LocalDateTime.now());
     tasksDao.create(task);
