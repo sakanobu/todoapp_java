@@ -1,6 +1,6 @@
 package com.example.sakanobu.todoapp;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -10,10 +10,11 @@ public class Task {
   @Size(min = 1, max = 20, message = "ToDo名は1文字以上20文字以内で入力してください。")
   private String title;
   private String status;
-  private Timestamp createdAt;
-  private Timestamp updatedAt;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 
-  public Task(String id, String title, String status, Timestamp createdAt, Timestamp updatedAt) {
+  public Task(String id, String title, String status, LocalDateTime createdAt,
+              LocalDateTime updatedAt) {
     this.id = id;
     this.title = title;
     this.status = status;
@@ -45,19 +46,19 @@ public class Task {
     this.status = status;
   }
 
-  public Timestamp getCreatedAt() {
+  public LocalDateTime getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(Timestamp createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
   }
 
-  public Timestamp getUpdatedAt() {
+  public LocalDateTime getUpdatedAt() {
     return updatedAt;
   }
 
-  public void setUpdatedAt(Timestamp updatedAt) {
+  public void setUpdatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
   }
 }

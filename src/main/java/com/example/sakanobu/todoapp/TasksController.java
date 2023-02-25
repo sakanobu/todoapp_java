@@ -1,6 +1,6 @@
 package com.example.sakanobu.todoapp;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,7 @@ public class TasksController {
   @PostMapping
   public String createTask(@RequestParam("title") String title) {
     String id = UUID.randomUUID().toString();
-    Task task = new Task(id, title, "UNFINISHED", new Timestamp(System.currentTimeMillis()),
-        new Timestamp(System.currentTimeMillis()));
+    Task task = new Task(id, title, "UNFINISHED", LocalDateTime.now(), LocalDateTime.now());
     tasksDao.create(task);
     return "redirect:/todos";
   }
@@ -56,7 +55,7 @@ public class TasksController {
                             BindingResult bindingResult,
                             @PathVariable("id") String id, @RequestParam("title") String title,
                             @RequestParam("status") String status,
-                            @RequestParam("createdAt") Timestamp createdAt, Model model) {
+                            @RequestParam("createdAt") LocalDateTime createdAt, Model model) {
     if (bindingResult.hasErrors()) {
       List<String> statusList = List.of("UNFINISHED", "FINISHED");
       model.addAttribute("task", requestTask);
@@ -65,7 +64,7 @@ public class TasksController {
     }
 
     Task task = new Task(id, title, status, createdAt,
-        new Timestamp(System.currentTimeMillis()));
+        LocalDateTime.now());
     tasksDao.update(task);
     return "redirect:/todos";
   }

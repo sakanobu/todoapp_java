@@ -36,8 +36,8 @@ public class TasksDao {
     return result.stream()
         .map((Map<String, Object> row) -> new Task(row.get("id").toString(),
             row.get("title").toString(), row.get("status").toString(),
-            Timestamp.valueOf(row.get("created_at").toString()),
-            Timestamp.valueOf(row.get("updated_at").toString())))
+            Timestamp.valueOf(row.get("created_at").toString()).toLocalDateTime(),
+            Timestamp.valueOf(row.get("updated_at").toString()).toLocalDateTime()))
         .toList();
   }
 
@@ -59,8 +59,8 @@ public class TasksDao {
 
     return new Task(targetTask.get("id").toString(),
         targetTask.get("title").toString(), targetTask.get("status").toString(),
-        Timestamp.valueOf(targetTask.get("created_at").toString()),
-        Timestamp.valueOf(targetTask.get("updated_at").toString()));
+        Timestamp.valueOf(targetTask.get("created_at").toString()).toLocalDateTime(),
+        Timestamp.valueOf(targetTask.get("updated_at").toString()).toLocalDateTime());
   }
 
   public void create(Task task) {
