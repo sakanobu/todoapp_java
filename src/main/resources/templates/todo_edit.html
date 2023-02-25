@@ -10,13 +10,21 @@
         <h2>ToDoの更新</h2>
 
         <form th:object="${task}" th:action="@{/todos/{id}(id=*{id})}" th:method="put">
-            <label for="title">ToDo名</label>
-            <input type="text" id="title" name="title" th:value="*{title}">
-            <label for="status">状態</label>
-            <select id="status" name="status">
-                <option th:each="status : ${statusList}" th:value="${status}"
-                        th:selected="${status == task.status}" th:text="${status}"></option>
-            </select>
+            <div>
+                <label for="title">ToDo名</label>
+                <input type="text" th:field="*{title}">
+                <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></div>
+            </div>
+            <div>
+                <label for="status">状態</label>
+                <select id="status" name="status">
+                    <option th:each="status : ${statusList}" th:value="${status}"
+                            th:selected="${status == task.status}" th:text="${status}"></option>
+                </select>
+            </div>
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{createdAt}">
+            <input type="hidden" th:field="*{updatedAt}">
             <button type="submit">更新</button>
         </form>
 

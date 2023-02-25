@@ -6,10 +6,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -36,7 +39,6 @@ public class TasksController {
     Task task = new Task(id, title, "UNFINISHED", new Timestamp(System.currentTimeMillis()),
         new Timestamp(System.currentTimeMillis()));
     tasksDao.create(task);
-    // tasksDao.createByString(title);
     return "redirect:/todos";
   }
 
@@ -47,6 +49,25 @@ public class TasksController {
     model.addAttribute("task", task);
     model.addAttribute("statusList", statusList);
     return "todo_edit";
+  }
+
+  @PutMapping("/{id}")
+  public String updaateTask(@Validated Task requestTask,
+                            BindingResult bindingResult,
+                            @PathVariable("id") String id, @RequestParam("title") String title,
+                            @RequestParam("status") String status,
+                            @RequestParam("createdAt") Timestamp createdAt, Model model) {
+    if (bindingResult.hasErrors()) {
+      List<String> statusList = List.of("UNFINISHED", "FINISHED");
+      model.addAttribute("task", requestTask);
+      model.addAttribute("statusList", statusList);
+      return "todo_edit";
+    }
+
+    Task task = new Task(id, title, status, createdAt,
+        new Timestamp(System.currentTimeMillis()));
+    tasksDao.update(task);
+    return "redirect:/todos";
   }
 
   @DeleteMapping("/{id}")

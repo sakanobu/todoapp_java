@@ -77,7 +77,24 @@ public class TasksDao {
         VALUES
           (?);
         """;
+
     jdbcTemplate.update(query, title);
+  }
+
+  public void update(Task task) {
+    String query = """
+        UPDATE
+          tasks
+        SET
+          title = ?,
+          status = ?,
+          updated_at = ?
+        WHERE
+          id = ?
+        """;
+
+    jdbcTemplate.update(query, task.getTitle(), task.getStatus(), task.getUpdatedAt(),
+        task.getId());
   }
 
   public void delete(String id) {
@@ -87,6 +104,7 @@ public class TasksDao {
         WHERE
           id = ?
         """;
+
     jdbcTemplate.update(query, id);
   }
 }

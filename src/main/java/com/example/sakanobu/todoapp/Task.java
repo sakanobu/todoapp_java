@@ -1,9 +1,13 @@
 package com.example.sakanobu.todoapp;
 
 import java.sql.Timestamp;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class Task {
   private String id;
+  @NotBlank(message = "ToDo名を入力してください。")
+  @Size(min = 1, max = 20, message = "ToDo名は1文字以上20文字以内で入力してください。")
   private String title;
   private String status;
   private Timestamp createdAt;
