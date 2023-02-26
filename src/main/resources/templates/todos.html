@@ -10,16 +10,10 @@
 
         <h2> ToDoの追加 </h2>
 
-        <form th:object="${inputTask}" th:action="@{/todos}" th:method="post">
-
-            <div th:if="${errorList}" th:each="error : ${errorList}">
-                <div th:text="${error}" style="color: red"></div>
-            </div>
-
-
+        <form th:object="${task}" th:action="@{/todos}" th:method="post">
+            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></div>
             <label for="title">ToDo名</label>
             <input type="text" th:field="*{title}">
-            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></div>
             <button type="submit">登録</button>
         </form>
 

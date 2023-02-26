@@ -31,7 +31,7 @@ public class TasksController {
   public String listTasks(Model model) {
     Task inputTask = new Task("", "", "", LocalDateTime.now(), LocalDateTime.now());
     List<Task> allTasks = tasksDao.findAll();
-    model.addAttribute("inputTask", inputTask);
+    model.addAttribute("task", inputTask);
     model.addAttribute("allTasks", allTasks);
     return "todos";
   }
@@ -44,7 +44,7 @@ public class TasksController {
           DefaultMessageSourceResolvable::getDefaultMessage).toList();
       List<Task> allTasks = tasksDao.findAll();
       model.addAttribute("allTasks", allTasks);
-      model.addAttribute("inputTask", inputTask);
+      model.addAttribute("task", inputTask);
       model.addAttribute("errorList", errorList);
       return "todos";
     }
