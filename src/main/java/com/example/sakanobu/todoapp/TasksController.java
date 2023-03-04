@@ -44,7 +44,7 @@ public class TasksController {
       return "todos";
     }
 
-    Task task = new Task(null, title, "UNFINISHED", LocalDateTime.now(), LocalDateTime.now());
+    Task task = new Task(null, title, "未完了", LocalDateTime.now(), LocalDateTime.now());
     tasksDao.create(task);
     return "redirect:/todos";
   }
@@ -52,7 +52,7 @@ public class TasksController {
   @GetMapping("/{id}/edit")
   public String editTaskForm(@PathVariable("id") Integer id, Model model) {
     Task task = tasksDao.findById(id);
-    List<String> statusList = List.of("UNFINISHED", "FINISHED");
+    List<String> statusList = List.of("未完了", "完了");
     model.addAttribute("task", task);
     model.addAttribute("statusList", statusList);
     return "todo_edit";
@@ -65,7 +65,7 @@ public class TasksController {
                            @RequestParam("status") String status,
                            @RequestParam("createdAt") LocalDateTime createdAt, Model model) {
     if (bindingResult.hasErrors()) {
-      List<String> statusList = List.of("UNFINISHED", "FINISHED");
+      List<String> statusList = List.of("未完了", "完了");
       model.addAttribute("task", requestTask);
       model.addAttribute("statusList", statusList);
       return "todo_edit";
