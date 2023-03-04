@@ -34,14 +34,14 @@ public class TasksDao {
     List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
 
     return result.stream()
-        .map((Map<String, Object> row) -> new Task(row.get("id").toString(),
+        .map((Map<String, Object> row) -> new Task(Integer.valueOf(row.get("id").toString()),
             row.get("title").toString(), row.get("status").toString(),
             Timestamp.valueOf(row.get("created_at").toString()).toLocalDateTime(),
             Timestamp.valueOf(row.get("updated_at").toString()).toLocalDateTime()))
         .toList();
   }
 
-  public Task findById(String id) {
+  public Task findById(Integer id) {
     String query = """
         SELECT
           t.id,
@@ -57,7 +57,7 @@ public class TasksDao {
 
     Map<String, Object> targetTask = jdbcTemplate.queryForMap(query, id);
 
-    return new Task(targetTask.get("id").toString(),
+    return new Task(Integer.valueOf(targetTask.get("id").toString()),
         targetTask.get("title").toString(), targetTask.get("status").toString(),
         Timestamp.valueOf(targetTask.get("created_at").toString()).toLocalDateTime(),
         Timestamp.valueOf(targetTask.get("updated_at").toString()).toLocalDateTime());
@@ -65,7 +65,8 @@ public class TasksDao {
 
   public void create(Task task) {
     SqlParameterSource param = new BeanPropertySqlParameterSource(task);
-    SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate).withTableName("tasks");
+    SimpleJdbcInsert insert =
+        new SimpleJdbcInsert(jdbcTemplate).withTableName("tasks").usingGeneratedKeyColumns("id");
 
     insert.execute(param);
   }
@@ -97,7 +98,7 @@ public class TasksDao {
         task.getId());
   }
 
-  public void delete(String id) {
+  public void delete(Integer id) {
     String query = """
         DELETE FROM
           tasks

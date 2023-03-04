@@ -2,9 +2,7 @@ package com.example.sakanobu.todoapp;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,7 +27,7 @@ public class TasksController {
 
   @GetMapping
   public String listTasks(Model model) {
-    Task inputTask = new Task("", "", "", LocalDateTime.now(), LocalDateTime.now());
+    Task inputTask = new Task(null, "", "", LocalDateTime.now(), LocalDateTime.now());
     List<Task> allTasks = tasksDao.findAll();
     model.addAttribute("task", inputTask);
     model.addAttribute("allTasks", allTasks);
@@ -46,14 +44,13 @@ public class TasksController {
       return "todos";
     }
 
-    String id = UUID.randomUUID().toString();
-    Task task = new Task(id, title, "UNFINISHED", LocalDateTime.now(), LocalDateTime.now());
+    Task task = new Task(null, title, "UNFINISHED", LocalDateTime.now(), LocalDateTime.now());
     tasksDao.create(task);
     return "redirect:/todos";
   }
 
   @GetMapping("/{id}/edit")
-  public String editTaskForm(@PathVariable("id") String id, Model model) {
+  public String editTaskForm(@PathVariable("id") Integer id, Model model) {
     Task task = tasksDao.findById(id);
     List<String> statusList = List.of("UNFINISHED", "FINISHED");
     model.addAttribute("task", task);
@@ -64,7 +61,7 @@ public class TasksController {
   @PutMapping("/{id}")
   public String updateTask(@Validated Task requestTask,
                            BindingResult bindingResult,
-                           @PathVariable("id") String id, @RequestParam("title") String title,
+                           @PathVariable("id") Integer id, @RequestParam("title") String title,
                            @RequestParam("status") String status,
                            @RequestParam("createdAt") LocalDateTime createdAt, Model model) {
     if (bindingResult.hasErrors()) {
@@ -81,7 +78,7 @@ public class TasksController {
   }
 
   @DeleteMapping("/{id}")
-  public String deleteTask(@PathVariable("id") String id) {
+  public String deleteTask(@PathVariable("id") Integer id) {
     tasksDao.delete(id);
     return "redirect:/todos";
   }
