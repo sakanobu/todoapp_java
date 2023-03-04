@@ -22,6 +22,14 @@
                             th:selected="${status == task.status}" th:text="${status}"></option>
                 </select>
             </div>
+            <div>
+                <label for="priority">優先度</label>
+                <select id="priority" name="priority">
+                    <option th:each="priority : ${priorityList}" th:value="${priority}"
+                            th:selected="${priority == task.priority}" th:text="${priority}"></option>
+                </select>
+            </div>
+            <input type="date" th:field="*{dueDate}">
             <input type="hidden" th:field="*{id}">
             <input type="hidden" th:field="*{createdAt}">
             <input type="hidden" th:field="*{updatedAt}">
@@ -37,7 +45,7 @@
         <h2>※デバッグ用 ToDo</h2>
 
         <div th:object="${task}"
-             th:text="|*{id}, *{title}, *{status}, *{createdAt}, *{updatedAt}|">
+             th:text="|*{id}, *{title}, *{status}, *{priority}, *{dueDate}, *{createdAt}, *{updatedAt}|">
         </div>
     </body>
 </html>

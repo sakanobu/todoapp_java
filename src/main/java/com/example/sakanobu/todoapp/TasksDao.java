@@ -1,5 +1,6 @@
 package com.example.sakanobu.todoapp;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ public class TasksDao {
           t.id,
           t.title,
           t.status,
+          t.priority,
+          t.due_date,
           t.created_at,
           t.updated_at
         FROM
@@ -36,6 +39,8 @@ public class TasksDao {
     return result.stream()
         .map((Map<String, Object> row) -> new Task(Integer.valueOf(row.get("id").toString()),
             row.get("title").toString(), row.get("status").toString(),
+            row.get("priority").toString(),
+            Date.valueOf(row.get("due_date").toString()).toLocalDate(),
             Timestamp.valueOf(row.get("created_at").toString()).toLocalDateTime(),
             Timestamp.valueOf(row.get("updated_at").toString()).toLocalDateTime()))
         .toList();
@@ -47,6 +52,8 @@ public class TasksDao {
           t.id,
           t.title,
           t.status,
+          t.priority,
+          t.due_date,
           t.created_at,
           t.updated_at
         FROM
@@ -59,6 +66,8 @@ public class TasksDao {
 
     return new Task(Integer.valueOf(targetTask.get("id").toString()),
         targetTask.get("title").toString(), targetTask.get("status").toString(),
+        targetTask.get("priority").toString(),
+        Date.valueOf(targetTask.get("due_date").toString()).toLocalDate(),
         Timestamp.valueOf(targetTask.get("created_at").toString()).toLocalDateTime(),
         Timestamp.valueOf(targetTask.get("updated_at").toString()).toLocalDateTime());
   }
@@ -89,13 +98,15 @@ public class TasksDao {
         SET
           title = ?,
           status = ?,
+          priority = ?,
+          due_date = ?,
           updated_at = ?
         WHERE
           id = ?;
         """;
 
-    jdbcTemplate.update(query, task.getTitle(), task.getStatus(), task.getUpdatedAt(),
-        task.getId());
+    jdbcTemplate.update(query, task.getTitle(), task.getStatus(), task.getPriority(),
+        task.getDueDate(), task.getUpdatedAt(), task.getId());
   }
 
   public void delete(Integer id) {
