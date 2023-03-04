@@ -40,12 +40,9 @@ public class TasksController {
   public String createTask(@Validated Task inputTask, BindingResult bindingResult,
                            @RequestParam("title") String title, Model model) {
     if (bindingResult.hasErrors()) {
-      List<String> errorList = bindingResult.getAllErrors().stream().map(
-          DefaultMessageSourceResolvable::getDefaultMessage).toList();
       List<Task> allTasks = tasksDao.findAll();
       model.addAttribute("allTasks", allTasks);
       model.addAttribute("task", inputTask);
-      model.addAttribute("errorList", errorList);
       return "todos";
     }
 
