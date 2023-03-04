@@ -6,8 +6,7 @@ import javax.validation.constraints.Size;
 
 public class Task {
   private String id;
-  @NotBlank(message = "ToDo名を入力してください。")
-  @Size(min = 1, max = 20, message = "ToDo名は1文字以上20文字以内で入力してください。")
+  @Size(min = 1, max = 9, message = "ToDo名は1文字以上9文字以内で入力してください。")
   private String title;
   private String status;
   private LocalDateTime createdAt;
