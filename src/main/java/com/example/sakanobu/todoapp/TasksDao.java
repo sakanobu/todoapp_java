@@ -28,7 +28,7 @@ public class TasksDao {
           t.created_at,
           t.updated_at
         FROM
-          tasks AS t
+          tasks AS t;
         """;
 
     List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
@@ -52,7 +52,7 @@ public class TasksDao {
         FROM
           tasks AS t
         WHERE
-          t.id = ?
+          t.id = ?;
         """;
 
     Map<String, Object> targetTask = jdbcTemplate.queryForMap(query, id);
@@ -91,7 +91,7 @@ public class TasksDao {
           status = ?,
           updated_at = ?
         WHERE
-          id = ?
+          id = ?;
         """;
 
     jdbcTemplate.update(query, task.getTitle(), task.getStatus(), task.getUpdatedAt(),
@@ -100,10 +100,12 @@ public class TasksDao {
 
   public void delete(Integer id) {
     String query = """
-        DELETE FROM
+        UPDATE
           tasks
+        SET
+          status = "削除済み"
         WHERE
-          id = ?
+          id = ?;
         """;
 
     jdbcTemplate.update(query, id);

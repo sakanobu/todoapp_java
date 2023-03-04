@@ -52,7 +52,7 @@ public class TasksController {
   @GetMapping("/{id}/edit")
   public String editTaskForm(@PathVariable("id") Integer id, Model model) {
     Task task = tasksDao.findById(id);
-    List<String> statusList = List.of("未完了", "完了");
+    List<String> statusList = List.of("未完了", "完了", "削除済み");
     model.addAttribute("task", task);
     model.addAttribute("statusList", statusList);
     return "todo_edit";
@@ -65,7 +65,7 @@ public class TasksController {
                            @RequestParam("status") String status,
                            @RequestParam("createdAt") LocalDateTime createdAt, Model model) {
     if (bindingResult.hasErrors()) {
-      List<String> statusList = List.of("未完了", "完了");
+      List<String> statusList = List.of("未完了", "完了", "削除済み");
       model.addAttribute("task", requestTask);
       model.addAttribute("statusList", statusList);
       return "todo_edit";

@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS todoapp_java_db.tasks;
 CREATE TABLE IF NOT EXISTS todoapp_java_db.tasks (
   id INT NOT NULL AUTO_INCREMENT,
   title VARCHAR (256) NOT NULL,
-  status ENUM("未完了", "完了") NOT NULL DEFAULT "未完了",
+  status ENUM("未完了", "完了", "削除済み") NOT NULL DEFAULT "未完了",
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
