@@ -27,22 +27,33 @@ public class TasksController {
     this.tasksDao = tasksDao;
   }
 
+  //  @GetMapping
+  //  public String listTasks(Model model) {
+  //    Task inputTask =
+  //        new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
+  //    List<Task> allTasks = tasksDao.findAll();
+  //    model.addAttribute("task", inputTask);
+  //    model.addAttribute("allTasks", allTasks);
+  //    return "todos";
+  //  }
+
   @GetMapping
-  public String listTasks(Model model) {
+  public String listUnfinishedDueDateTasks(Model model) {
     Task inputTask =
         new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
-    List<Task> allTasks = tasksDao.findAll();
+    List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
     model.addAttribute("task", inputTask);
-    model.addAttribute("allTasks", allTasks);
+    model.addAttribute("targetTasks", targetTasks);
     return "todos";
   }
+
 
   @PostMapping
   public String createTask(@Validated Task inputTask, BindingResult bindingResult,
                            @RequestParam("title") String title, Model model) {
     if (bindingResult.hasErrors()) {
-      List<Task> allTasks = tasksDao.findAll();
-      model.addAttribute("allTasks", allTasks);
+      List<Task> targetTasks = tasksDao.findAll();
+      model.addAttribute("targetTasks", targetTasks);
       model.addAttribute("task", inputTask);
       return "todos";
     }

@@ -20,6 +20,32 @@ public class TasksDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
+  public Task findById(Integer id) {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.priority,
+          t.due_date,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        WHERE
+          t.id = ?;
+        """;
+
+    Map<String, Object> targetTask = jdbcTemplate.queryForMap(query, id);
+
+    return new Task(Integer.valueOf(targetTask.get("id").toString()),
+        targetTask.get("title").toString(), targetTask.get("status").toString(),
+        targetTask.get("priority").toString(),
+        Date.valueOf(targetTask.get("due_date").toString()).toLocalDate(),
+        Timestamp.valueOf(targetTask.get("created_at").toString()).toLocalDateTime(),
+        Timestamp.valueOf(targetTask.get("updated_at").toString()).toLocalDateTime());
+  }
+
   public List<Task> findAll() {
     String query = """
         SELECT
@@ -46,7 +72,7 @@ public class TasksDao {
         .toList();
   }
 
-  public Task findById(Integer id) {
+  public List<Task> findByStatusUnfinishedOrderByDueDateAsc() {
     String query = """
         SELECT
           t.id,
@@ -59,18 +85,34 @@ public class TasksDao {
         FROM
           tasks AS t
         WHERE
-          t.id = ?;
+          t.status = '未完了'
+        ORDER BY
+          t.due_date ASC;
         """;
 
-    Map<String, Object> targetTask = jdbcTemplate.queryForMap(query, id);
+    // rowMapper でのメソッド参照でも書けるのかな？
+    return jdbcTemplate.query(query, (rs, rowNum) -> new Task(
+        rs.getInt("id"),
+        rs.getString("title"),
+        rs.getString("status"),
+        rs.getString("priority"),
+        rs.getDate("due_date").toLocalDate(),
+        rs.getTimestamp("created_at").toLocalDateTime(),
+        rs.getTimestamp("updated_at").toLocalDateTime()
+    ));
 
-    return new Task(Integer.valueOf(targetTask.get("id").toString()),
-        targetTask.get("title").toString(), targetTask.get("status").toString(),
-        targetTask.get("priority").toString(),
-        Date.valueOf(targetTask.get("due_date").toString()).toLocalDate(),
-        Timestamp.valueOf(targetTask.get("created_at").toString()).toLocalDateTime(),
-        Timestamp.valueOf(targetTask.get("updated_at").toString()).toLocalDateTime());
+    //    List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
+    //
+    //    return result.stream()
+    //        .map((Map<String, Object> row) -> new Task(Integer.valueOf(row.get("id").toString()),
+    //            row.get("title").toString(), row.get("status").toString(),
+    //            row.get("priority").toString(),
+    //            Date.valueOf(row.get("due_date").toString()).toLocalDate(),
+    //            Timestamp.valueOf(row.get("created_at").toString()).toLocalDateTime(),
+    //            Timestamp.valueOf(row.get("updated_at").toString()).toLocalDateTime()))
+    //        .toList();
   }
+
 
   public void create(Task task) {
     SqlParameterSource param = new BeanPropertySqlParameterSource(task);
@@ -114,7 +156,7 @@ public class TasksDao {
         UPDATE
           tasks
         SET
-          status = "削除済み"
+          status = '削除済み'
         WHERE
           id = ?;
         """;

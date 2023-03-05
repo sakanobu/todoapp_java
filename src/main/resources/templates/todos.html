@@ -45,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="task : ${allTasks}" th:object="${task}">
+                <tr th:each="task : ${targetTasks}" th:object="${task}">
                     <td th:text="*{title}"></td>
                     <td th:text="*{status}"></td>
                     <td th:text="*{priority}"></td>
@@ -68,7 +68,7 @@
 
         <h2>※デバッグ用 ToDo一覧</h2>
 
-        <div th:each="task : ${allTasks}" th:object="${task}">
+        <div th:each="task : ${targetTasks}" th:object="${task}">
             <div th:text="|*{id}, *{title}, *{status}, *{priority}, *{dueDate}, *{createdAt}, *{updatedAt}|"></div>
         </div>
     </body>
