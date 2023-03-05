@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
         <title>Todoapp_Java</title>
@@ -9,30 +9,30 @@
 
         <h2>ToDoの更新</h2>
 
-        <form th:object="${task}" th:action="@{/todos/{id}(id=*{id})}" th:method="put">
+        <form th:action="@{/todos/{id}(id=*{id})}" th:method="put" th:object="${task}">
             <div>
                 <label for="title">ToDo名</label>
-                <input type="text" th:field="*{title}">
-                <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></div>
+                <input th:field="*{title}" type="text">
+                <div style="color: red" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></div>
             </div>
             <div>
                 <label for="status">状態</label>
                 <select id="status" name="status">
-                    <option th:each="status : ${statusList}" th:value="${status}"
-                            th:selected="${status == task.status}" th:text="${status}"></option>
+                    <option th:each="status : ${statusList}" th:selected="${status == task.status}"
+                            th:text="${status}" th:value="${status}"></option>
                 </select>
             </div>
             <div>
                 <label for="priority">優先度</label>
                 <select id="priority" name="priority">
-                    <option th:each="priority : ${priorityList}" th:value="${priority}"
-                            th:selected="${priority == task.priority}" th:text="${priority}"></option>
+                    <option th:each="priority : ${priorityList}" th:selected="${priority == task.priority}"
+                            th:text="${priority}" th:value="${priority}"></option>
                 </select>
             </div>
-            <input type="date" th:field="*{dueDate}">
-            <input type="hidden" th:field="*{id}">
-            <input type="hidden" th:field="*{createdAt}">
-            <input type="hidden" th:field="*{updatedAt}">
+            <input th:field="*{dueDate}" type="date">
+            <input th:field="*{id}" type="hidden">
+            <input th:field="*{createdAt}" type="hidden">
+            <input th:field="*{updatedAt}" type="hidden">
             <button type="submit">更新</button>
         </form>
 
