@@ -6,13 +6,15 @@ spring:
     url: ${MYSQL_DB_URL}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
   sql:
     init:
       mode: always
       schema-locations: classpath:schema.sql
       data-locations: classpath:data.sql
       encoding: utf-8
-  mvc:
-    hiddenmethod:
-      filter:
-        enabled: true
+  thymeleaf:
+    cache: false
