@@ -42,19 +42,29 @@ public class TasksController {
     Task inputTask =
         new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
     List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
+    List<String> filterList = List.of("未完了", "未削除", "全て");
+    List<String> sortList = List.of("期限日", "優先度", "作成日");
+
     model.addAttribute("task", inputTask);
     model.addAttribute("targetTasks", targetTasks);
+    model.addAttribute("filterList", filterList);
+    model.addAttribute("sortList", sortList);
     return "todos";
   }
-
 
   @PostMapping
   public String createTask(@Validated Task inputTask, BindingResult bindingResult,
                            @RequestParam("title") String title, Model model) {
     if (bindingResult.hasErrors()) {
-      List<Task> targetTasks = tasksDao.findAll();
+      List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
+      List<String> filterList = List.of("未完了", "未削除", "全て");
+      List<String> sortList = List.of("期限日", "優先度", "作成日");
+
       model.addAttribute("targetTasks", targetTasks);
       model.addAttribute("task", inputTask);
+      model.addAttribute("filterList", filterList);
+      model.addAttribute("sortList", sortList);
+
       return "todos";
     }
 

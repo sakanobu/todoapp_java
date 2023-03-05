@@ -19,6 +19,24 @@
 
         <h2>ToDo一覧</h2>
 
+        <form>
+            <div>
+                <label for="filter">フィルター</label>
+                <select id="filter" name="filter">
+                    <option th:each="filter : ${filterList}" th:selected="${filter == '未完了'}" th:text="${filter}"
+                            th:value="${filter}"></option>
+                </select>
+            </div>
+            <div>
+                <label for="sort">ソート</label>
+                <select id="sort" name="sort">
+                    <option th:each="sort : ${sortList}" th:selected="${sort == '期限日'}"
+                            th:text="${sort}" th:value="${sort}"></option>
+                </select>
+            </div>
+            <button type="submit">表示</button>
+        </form>
+
         <table border="1">
             <thead>
                 <tr>

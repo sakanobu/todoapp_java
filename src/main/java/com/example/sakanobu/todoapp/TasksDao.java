@@ -113,7 +113,6 @@ public class TasksDao {
     //        .toList();
   }
 
-
   public void create(Task task) {
     SqlParameterSource param = new BeanPropertySqlParameterSource(task);
     SimpleJdbcInsert insert =
