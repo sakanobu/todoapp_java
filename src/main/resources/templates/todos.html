@@ -23,15 +23,16 @@
             <div>
                 <label for="filter">フィルター</label>
                 <select id="filter" name="filter">
-                    <option th:each="filter : ${filterList}" th:selected="${filter == '未完了'}" th:text="${filter}"
-                            th:value="${filter}"></option>
+                    <option th:each='filterItem : ${filterList}' th:selected="${filterItem == '未完了'}"
+                            th:text="${filterItem}"
+                            th:value="${filterItem}"></option>
                 </select>
             </div>
             <div>
                 <label for="sort">ソート</label>
                 <select id="sort" name="sort">
-                    <option th:each="sort : ${sortList}" th:selected="${sort == '期限日'}"
-                            th:text="${sort}" th:value="${sort}"></option>
+                    <option th:each="sortItem : ${sortList}" th:selected="${sortItem == '期限日'}"
+                            th:text="${sortItem}" th:value="${sortItem}"></option>
                 </select>
             </div>
             <button type="submit">表示</button>
