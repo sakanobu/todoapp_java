@@ -14,6 +14,11 @@
             <div style="color: red" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></div>
             <label for="title">ToDo名</label>
             <input th:field="*{title}" type="text">
+            <div th:if="${queryParameterMap != null}">
+                <input th:name="filter" th:value="${queryParameterMap.get('filter')}" type="hidden">
+                <input th:name="sort" th:value="${queryParameterMap.get('sort')}" type="hidden">
+            </div>
+            <!-- if が true になることで div要素による下記 button の改行が発生してしまう -->
             <button type="submit">登録</button>
         </form>
 
@@ -23,7 +28,8 @@
             <div>
                 <label for="filter">フィルター</label>
                 <select id="filter" name="filter">
-                    <option th:each='filterItem : ${filterList}' th:selected="${filterItem == '未完了'}"
+                    <option th:each='filterItem : ${filterList}'
+                            th:selected="${queryParameterMap == null} ? ${filterItem == '未完了'} : ${filterItem == queryParameterMap.get('filter')}"
                             th:text="${filterItem}"
                             th:value="${filterItem}"></option>
                 </select>
@@ -31,7 +37,8 @@
             <div>
                 <label for="sort">ソート</label>
                 <select id="sort" name="sort">
-                    <option th:each="sortItem : ${sortList}" th:selected="${sortItem == '期限日'}"
+                    <option th:each="sortItem : ${sortList}"
+                            th:selected="${queryParameterMap == null} ? ${sortItem == '期限日'} : ${sortItem == queryParameterMap.get('sort')}"
                             th:text="${sortItem}" th:value="${sortItem}"></option>
                 </select>
             </div>

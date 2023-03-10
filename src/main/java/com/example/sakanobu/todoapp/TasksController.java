@@ -3,6 +3,7 @@ package com.example.sakanobu.todoapp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -64,6 +65,9 @@ public class TasksController {
 
   @GetMapping
   public String listUnfinishedDueDateTasks(Model model) {
+
+    // ToDo queryParameterMapを作成
+
     Task inputTask =
         new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
     List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
@@ -74,9 +78,54 @@ public class TasksController {
     return "todos";
   }
 
+  @GetMapping(params = {"filter", "sort"})
+  public String listTasksByQueryParameter(@RequestParam String filter, @RequestParam String sort,
+                                          Model model) {
+    Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
+    Task inputTask =
+        new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
+    List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
+
+    model.addAttribute("task", inputTask);
+    model.addAttribute("targetTasks", targetTasks);
+    model.addAttribute("queryParameterMap", queryParameterMap);
+
+    return "todos";
+  }
+
   @PostMapping
   public String createTask(@Validated Task inputTask, BindingResult bindingResult,
                            @RequestParam("title") String title, Model model) {
+    Map<String, String> queryParameterMap = Map.of("filter", "未完了", "sort", "期限日");
+    model.addAttribute("queryParameterMap", queryParameterMap);
+
+    if (bindingResult.hasErrors()) {
+      // ToDo queryParameterMapを作成
+      
+      List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
+
+      model.addAttribute("targetTasks", targetTasks);
+      model.addAttribute("task", inputTask);
+
+      return "todos";
+    }
+
+    Task task = new Task(null, title, "未完了", "中", LocalDate.now(), LocalDateTime.now(),
+        LocalDateTime.now());
+
+    tasksDao.create(task);
+
+    return "redirect:/todos";
+  }
+
+  @PostMapping(params = {"filter", "sort"})
+  public String createTask(@Validated Task inputTask, BindingResult bindingResult,
+                           @RequestParam("title") String title,
+                           @RequestParam("filter") String filter, @RequestParam("sort") String sort,
+                           Model model) {
+    Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
+    model.addAttribute("queryParameterMap", queryParameterMap);
+
     if (bindingResult.hasErrors()) {
       List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
 
