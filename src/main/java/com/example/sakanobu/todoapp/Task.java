@@ -85,4 +85,10 @@ public class Task {
   public void setUpdatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
   }
+
+  @Override
+  public String toString() {
+    return "id: %d, title: %s, status: %s, priority: %s, dueDate: %s, createdAt: %s, updatedAt: %s"
+        .formatted(id, title, status, priority, dueDate, createdAt, updatedAt);
+  }
 }

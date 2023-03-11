@@ -47,5 +47,11 @@
         <div th:object="${task}"
              th:text="|*{id}, *{title}, *{status}, *{priority}, *{dueDate}, *{createdAt}, *{updatedAt}|">
         </div>
+        <div th:text="|task: ${task.toString()}|"></div>
+        <div th:text="|queryParameterMap: ${queryParameterMap}|"></div>
+        <div th:text="|filterList: ${filterList}|"></div>
+        <div th:text="|sortList: ${sortList}|"></div>
+        <div th:text="|priorityList: ${priorityList}|"></div>
+        <div th:text="|statusList: ${statusList}|"></div>
     </body>
 </html>
