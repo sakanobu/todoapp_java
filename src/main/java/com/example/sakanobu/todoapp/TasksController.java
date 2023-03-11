@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/todos")
@@ -53,27 +55,18 @@ public class TasksController {
     return priorityList;
   }
 
-  //  @GetMapping
-  //  public String listTasks(Model model) {
-  //    Task inputTask =
-  //        new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
-  //    List<Task> allTasks = tasksDao.findAll();
-  //    model.addAttribute("task", inputTask);
-  //    model.addAttribute("allTasks", allTasks);
-  //    return "todos";
-  //  }
-
   @GetMapping
   public String listUnfinishedDueDateTasks(Model model) {
-
-    // ToDo queryParameterMapを作成
-
+    Optional<Map<String, String>> queryParameterMap =
+        Optional.ofNullable((Map<String, String>) model.getAttribute("queryParameterMap"));
     Task inputTask =
         new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
-    List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
 
+    queryParameterMap.ifPresentOrElse(q -> model.addAttribute("queryParameterMap", q),
+        () -> model.addAttribute("queryParameterMap", null));
+    // ToDo Task の一覧を持ってくる Dao は queryParameterMap を引数に取るようにする
+    model.addAttribute("targetTasks", tasksDao.findByStatusUnfinishedOrderByDueDateAsc());
     model.addAttribute("task", inputTask);
-    model.addAttribute("targetTasks", targetTasks);
 
     return "todos";
   }
@@ -84,26 +77,27 @@ public class TasksController {
     Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
     Task inputTask =
         new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
+    // ToDo Task の一覧を持ってくる Dao は queryParameterMap を引数に取るようにする
     List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
 
+    model.addAttribute("queryParameterMap", queryParameterMap);
     model.addAttribute("task", inputTask);
     model.addAttribute("targetTasks", targetTasks);
-    model.addAttribute("queryParameterMap", queryParameterMap);
 
     return "todos";
   }
 
   @PostMapping
   public String createTask(@Validated Task inputTask, BindingResult bindingResult,
-                           @RequestParam("title") String title, Model model) {
+                           @RequestParam("title") String title,
+                           RedirectAttributes redirectAttributes, Model model) {
     Map<String, String> queryParameterMap = Map.of("filter", "未完了", "sort", "期限日");
-    model.addAttribute("queryParameterMap", queryParameterMap);
 
     if (bindingResult.hasErrors()) {
-      // ToDo queryParameterMapを作成
-      
+      // ToDo Task の一覧を持ってくる Dao は queryParameterMap を引数に取るようにする
       List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
 
+      model.addAttribute("queryParameterMap", queryParameterMap);
       model.addAttribute("targetTasks", targetTasks);
       model.addAttribute("task", inputTask);
 
@@ -114,6 +108,8 @@ public class TasksController {
         LocalDateTime.now());
 
     tasksDao.create(task);
+
+    redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
 
     return "redirect:/todos";
   }
@@ -122,13 +118,14 @@ public class TasksController {
   public String createTask(@Validated Task inputTask, BindingResult bindingResult,
                            @RequestParam("title") String title,
                            @RequestParam("filter") String filter, @RequestParam("sort") String sort,
-                           Model model) {
+                           RedirectAttributes redirectAttributes, Model model) {
     Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
-    model.addAttribute("queryParameterMap", queryParameterMap);
 
     if (bindingResult.hasErrors()) {
+      // ToDo Task の一覧を持ってくる Dao は queryParameterMap を引数に取るようにする
       List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
 
+      model.addAttribute("queryParameterMap", queryParameterMap);
       model.addAttribute("targetTasks", targetTasks);
       model.addAttribute("task", inputTask);
 
@@ -139,6 +136,8 @@ public class TasksController {
         LocalDateTime.now());
 
     tasksDao.create(task);
+
+    redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
 
     return "redirect:/todos";
   }
