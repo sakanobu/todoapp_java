@@ -86,6 +86,8 @@ public class TasksController {
   @PostMapping
   public String createTask(@Validated Task inputTask, BindingResult bindingResult,
                            @RequestParam("title") String title,
+                           @RequestParam("dueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                           LocalDate dueDate,
                            RedirectAttributes redirectAttributes, Model model) {
     Map<String, String> queryParameterMap = Map.of("filter", "未完了", "sort", "期限日");
 
@@ -97,7 +99,7 @@ public class TasksController {
       return "todos";
     }
 
-    tasksDao.create(new Task(null, title, "未完了", "中", LocalDate.now(), LocalDateTime.now(),
+    tasksDao.create(new Task(null, title, "未完了", "中", dueDate, LocalDateTime.now(),
         LocalDateTime.now()));
 
     redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
@@ -108,6 +110,8 @@ public class TasksController {
   @PostMapping(params = {"filter", "sort"})
   public String createTask(@Validated Task inputTask, BindingResult bindingResult,
                            @RequestParam("title") String title,
+                           @RequestParam("dueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                           LocalDate dueDate,
                            @RequestParam("filter") String filter, @RequestParam("sort") String sort,
                            RedirectAttributes redirectAttributes, Model model) {
     Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
@@ -120,7 +124,7 @@ public class TasksController {
       return "todos";
     }
 
-    tasksDao.create(new Task(null, title, "未完了", "中", LocalDate.now(), LocalDateTime.now(),
+    tasksDao.create(new Task(null, title, "未完了", "中", dueDate, LocalDateTime.now(),
         LocalDateTime.now()));
 
     redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
