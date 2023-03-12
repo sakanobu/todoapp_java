@@ -11,25 +11,25 @@
 
         <form th:action="@{/todos/{id}(id=*{id})}" th:method="put" th:object="${task}">
             <div>
-                <label th:for="title">ToDo名</label>
+                <label th:for="title">ToDo名:</label>
                 <input th:field="*{title}" type="text">
                 <div style="color: red" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></div>
             </div>
             <div>
-                <label th:for="status">状態</label>
+                <label th:for="status">状態:</label>
                 <select th:id="status" th:name="status">
                     <option th:each="status : ${statusList}" th:selected="${status == task.status}"
                             th:text="${status}" th:value="${status}"></option>
                 </select>
             </div>
             <div>
-                <label th:for="priority">優先度</label>
+                <label th:for="priority">優先度:</label>
                 <select th:id="priority" th:name="priority">
                     <option th:each="priority : ${priorityList}" th:selected="${priority == task.priority}"
                             th:text="${priority}" th:value="${priority}"></option>
                 </select>
             </div>
-            <label th:for="dueDate">期限日</label>
+            <label th:for="dueDate">期限日:</label>
             <input th:field="*{dueDate}" type="date">
             <input th:field="*{id}" type="hidden">
             <input th:field="*{createdAt}" type="hidden">
