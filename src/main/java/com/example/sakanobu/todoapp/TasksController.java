@@ -53,19 +53,17 @@ public class TasksController {
 
   @GetMapping
   public String listUnfinishedDueDateTasks(Model model) {
-    Optional<Map<String, String>> queryParameterMap =
-        Optional.ofNullable((Map<String, String>) model.getAttribute("queryParameterMap"));
-    Task inputTask =
-        new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
+    model.addAttribute("task",
+        new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now()));
 
-    queryParameterMap.ifPresentOrElse(q -> {
-      model.addAttribute("queryParameterMap", q);
-      model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(q));
-    }, () -> {
-      model.addAttribute("queryParameterMap", null);
-      model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(null));
-    });
-    model.addAttribute("task", inputTask);
+    Optional.ofNullable((Map<String, String>) model.getAttribute("queryParameterMap"))
+        .ifPresentOrElse(q -> {
+          model.addAttribute("queryParameterMap", q);
+          model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(q));
+        }, () -> {
+          model.addAttribute("queryParameterMap", null);
+          model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(null));
+        });
 
     return "todos";
   }
@@ -74,13 +72,11 @@ public class TasksController {
   public String listTasksByQueryParameter(@RequestParam String filter, @RequestParam String sort,
                                           Model model) {
     Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
-    Task inputTask =
-        new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
-    List<Task> targetTasks = tasksDao.getFilteredSortedTasks(queryParameterMap);
 
     model.addAttribute("queryParameterMap", queryParameterMap);
-    model.addAttribute("task", inputTask);
-    model.addAttribute("targetTasks", targetTasks);
+    model.addAttribute("task",
+        new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now()));
+    model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(queryParameterMap));
 
     return "todos";
   }
@@ -92,19 +88,15 @@ public class TasksController {
     Map<String, String> queryParameterMap = Map.of("filter", "未完了", "sort", "期限日");
 
     if (bindingResult.hasErrors()) {
-      List<Task> targetTasks = tasksDao.getFilteredSortedTasks(queryParameterMap);
-
       model.addAttribute("queryParameterMap", queryParameterMap);
-      model.addAttribute("targetTasks", targetTasks);
+      model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(queryParameterMap));
       model.addAttribute("task", inputTask);
 
       return "todos";
     }
 
-    Task task = new Task(null, title, "未完了", "中", LocalDate.now(), LocalDateTime.now(),
-        LocalDateTime.now());
-
-    tasksDao.create(task);
+    tasksDao.create(new Task(null, title, "未完了", "中", LocalDate.now(), LocalDateTime.now(),
+        LocalDateTime.now()));
 
     redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
 
@@ -119,19 +111,15 @@ public class TasksController {
     Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
 
     if (bindingResult.hasErrors()) {
-      List<Task> targetTasks = tasksDao.getFilteredSortedTasks(queryParameterMap);
-
       model.addAttribute("queryParameterMap", queryParameterMap);
-      model.addAttribute("targetTasks", targetTasks);
+      model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(queryParameterMap));
       model.addAttribute("task", inputTask);
 
       return "todos";
     }
 
-    Task task = new Task(null, title, "未完了", "中", LocalDate.now(), LocalDateTime.now(),
-        LocalDateTime.now());
-
-    tasksDao.create(task);
+    tasksDao.create(new Task(null, title, "未完了", "中", LocalDate.now(), LocalDateTime.now(),
+        LocalDateTime.now()));
 
     redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
 
@@ -140,9 +128,7 @@ public class TasksController {
 
   @GetMapping("/{id}/edit")
   public String editTaskForm(@PathVariable("id") Integer id, Model model) {
-    Task task = tasksDao.findById(id);
-
-    model.addAttribute("task", task);
+    model.addAttribute("task", tasksDao.findById(id));
 
     return "todo_edit";
   }
@@ -160,20 +146,17 @@ public class TasksController {
 
       return "todo_edit";
     }
-    Task task = new Task(id, title, status, priority, dueDate, createdAt, LocalDateTime.now());
-
-    tasksDao.update(task);
+    tasksDao.update(new Task(id, title, status, priority, dueDate, createdAt, LocalDateTime.now()));
 
     return "redirect:/todos";
   }
 
   @DeleteMapping("/{id}")
   public String deleteTask(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
-    Map<String, String> queryParameterMap = Map.of("filter", "未完了", "sort", "期限日");
-
     tasksDao.delete(id);
 
-    redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
+    redirectAttributes.addFlashAttribute("queryParameterMap",
+        Map.of("filter", "未完了", "sort", "期限日"));
 
     return "redirect:/todos";
   }
@@ -182,11 +165,10 @@ public class TasksController {
   public String deleteTask(@PathVariable("id") Integer id, @RequestParam("filter") String filter,
                            @RequestParam("sort") String sort,
                            RedirectAttributes redirectAttributes) {
-    Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
-
     tasksDao.delete(id);
 
-    redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
+    redirectAttributes.addFlashAttribute("queryParameterMap",
+        Map.of("filter", filter, "sort", sort));
 
     return "redirect:/todos";
   }
