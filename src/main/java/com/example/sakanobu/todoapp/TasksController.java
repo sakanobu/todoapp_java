@@ -25,10 +25,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/todos")
 public class TasksController {
   private final TasksDao tasksDao;
-  private final List<String> filterList = List.of("未完了", "未削除", "全て");
-  private final List<String> sortList = List.of("期限日", "優先度", "作成日");
-  private final List<String> statusList = List.of("未完了", "完了", "削除済み");
-  private final List<String> priorityList = List.of("低", "中", "高");
 
   @Autowired
   public TasksController(TasksDao tasksDao) {
@@ -37,22 +33,22 @@ public class TasksController {
 
   @ModelAttribute("filterList")
   public List<String> getFilterList() {
-    return filterList;
+    return List.of("未完了", "未削除", "全て");
   }
 
   @ModelAttribute("sortList")
   public List<String> getSortList() {
-    return sortList;
+    return List.of("期限日", "優先度", "作成日");
   }
 
   @ModelAttribute("statusList")
   public List<String> getStatusList() {
-    return statusList;
+    return List.of("未完了", "完了", "削除済み");
   }
 
   @ModelAttribute("priorityList")
   public List<String> getPriorityList() {
-    return priorityList;
+    return List.of("低", "中", "高");
   }
 
   @GetMapping
