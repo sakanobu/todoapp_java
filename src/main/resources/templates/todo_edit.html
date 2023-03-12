@@ -29,6 +29,7 @@
                             th:text="${priority}" th:value="${priority}"></option>
                 </select>
             </div>
+            <label th:for="dueDate">期限日</label>
             <input th:field="*{dueDate}" type="date">
             <input th:field="*{id}" type="hidden">
             <input th:field="*{createdAt}" type="hidden">
