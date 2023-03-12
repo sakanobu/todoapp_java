@@ -12,7 +12,7 @@
 
         <form th:action="@{/todos}" th:method="post" th:object="${task}">
             <div style="color: red" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></div>
-            <label for="title">ToDo名</label>
+            <label th:for="title">ToDo名</label>
             <input th:field="*{title}" type="text">
             <span th:if="${queryParameterMap != null}">
                 <input th:name="filter" th:value="${queryParameterMap.get('filter')}" type="hidden">
@@ -25,8 +25,8 @@
 
         <form>
             <div>
-                <label for="filter">フィルター</label>
-                <select id="filter" name="filter">
+                <label th:for="filter">フィルター</label>
+                <select th:id="filter" th:name="filter">
                     <option th:each='filterItem : ${filterList}'
                             th:selected="${queryParameterMap == null} ? ${filterItem == '未完了'} : ${filterItem == queryParameterMap.get('filter')}"
                             th:text="${filterItem}"
@@ -34,8 +34,8 @@
                 </select>
             </div>
             <div>
-                <label for="sort">ソート</label>
-                <select id="sort" name="sort">
+                <label th:for="sort">ソート</label>
+                <select th:id="sort" th:name="sort">
                     <option th:each="sortItem : ${sortList}"
                             th:selected="${queryParameterMap == null} ? ${sortItem == '期限日'} : ${sortItem == queryParameterMap.get('sort')}"
                             th:text="${sortItem}" th:value="${sortItem}"></option>
