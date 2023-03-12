@@ -77,7 +77,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="task : ${targetTasks}" th:object="${task}">
+                <tr th:each="task : ${targetTasks}" th:object="${task}" th:class="*{deadlineStatus}">
                     <td th:text="*{title}"></td>
                     <td th:text="*{status}"></td>
                     <td th:text="*{priority}"></td>

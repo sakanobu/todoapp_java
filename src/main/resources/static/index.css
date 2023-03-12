@@ -1,11 +1,19 @@
 table {
-  table-layout: fixed;
+    table-layout: fixed;
+}
+
+tr.todo-danger {
+    background-color: #ff6363;
+}
+
+tr.todo-warning {
+    background-color: #effc72;
 }
 
 th {
-  width: 100px;
+    width: 100px;
 }
 
 td {
-  text-align: center;
+    text-align: center;
 }
