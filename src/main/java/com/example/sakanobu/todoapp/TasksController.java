@@ -54,7 +54,8 @@ public class TasksController {
   @GetMapping
   public String listUnfinishedDueDateTasks(Model model) {
     model.addAttribute("task",
-        new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now()));
+        new Task(null, "", "", "", LocalDate.now().plusDays(7), LocalDateTime.now(),
+            LocalDateTime.now()));
 
     Optional.ofNullable((Map<String, String>) model.getAttribute("queryParameterMap"))
         .ifPresentOrElse(q -> {
@@ -75,7 +76,8 @@ public class TasksController {
 
     model.addAttribute("queryParameterMap", queryParameterMap);
     model.addAttribute("task",
-        new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now()));
+        new Task(null, "", "", "", LocalDate.now().plusDays(7), LocalDateTime.now(),
+            LocalDateTime.now()));
     model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(queryParameterMap));
 
     return "todos";

@@ -14,11 +14,18 @@
             <div style="color: red" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></div>
             <label th:for="title">ToDo名</label>
             <input th:field="*{title}" type="text">
+
+            <label th:for="dueDate">期限日:</label>
+            <input th:field="*{dueDate}" type="date">
+
             <span th:if="${queryParameterMap != null}">
                 <input th:name="filter" th:value="${queryParameterMap.get('filter')}" type="hidden">
                 <input th:name="sort" th:value="${queryParameterMap.get('sort')}" type="hidden">
             </span>
-            <button type="submit">登録</button>
+
+            <div>
+                <button type="submit">登録</button>
+            </div>
         </form>
 
         <h2>ToDo一覧</h2>
