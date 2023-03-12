@@ -172,8 +172,25 @@ public class TasksController {
   }
 
   @DeleteMapping("/{id}")
-  public String deleteTask(@PathVariable("id") Integer id) {
+  public String deleteTask(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+    Map<String, String> queryParameterMap = Map.of("filter", "未完了", "sort", "期限日");
+
     tasksDao.delete(id);
+
+    redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
+
+    return "redirect:/todos";
+  }
+
+  @DeleteMapping(path = "/{id}", params = {"filter", "sort"})
+  public String deleteTask(@PathVariable("id") Integer id, @RequestParam("filter") String filter,
+                           @RequestParam("sort") String sort,
+                           RedirectAttributes redirectAttributes) {
+    Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
+
+    tasksDao.delete(id);
+
+    redirectAttributes.addFlashAttribute("queryParameterMap", queryParameterMap);
 
     return "redirect:/todos";
   }

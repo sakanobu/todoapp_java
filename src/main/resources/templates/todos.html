@@ -85,6 +85,10 @@
                     </td>
                     <td>
                         <form th:action="@{/todos/{id}(id=*{id})}" th:method="delete">
+                            <span th:if="${queryParameterMap != null}">
+                                <input th:name="filter" th:value="${queryParameterMap.get('filter')}" type="hidden">
+                                <input th:name="sort" th:value="${queryParameterMap.get('sort')}" type="hidden">
+                            </span>
                             <button type="submit">削除</button>
                         </form>
                     </td>
