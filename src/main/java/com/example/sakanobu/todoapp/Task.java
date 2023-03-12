@@ -33,6 +33,24 @@ public class Task {
     this.updatedAt = updatedAt;
   }
 
+  /**
+   * ToDoのStatus、本日の日付、期限日などの関係からToDoの締切に関する状態をを表す文字列を返す.
+   *
+   * @return tr要素のclass属性に設定する文字列
+   */
+  public String getDeadlineStatus() {
+    if (!getStatus().equals("未完了")) {
+      return "";
+    }
+
+    if (isDueDateOver()) {
+      return "todo-danger";
+    } else if (isDueDateWithinOneDay()) {
+      return "todo-warning";
+    } else {
+      return "";
+    }
+  }
 
   /**
    * 本日の日付が期限日を超えているかを判定する.
