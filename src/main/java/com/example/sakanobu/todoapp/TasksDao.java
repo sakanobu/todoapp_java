@@ -1,17 +1,16 @@
 package com.example.sakanobu.todoapp;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository
 public class TasksDao {
   private final JdbcTemplate jdbcTemplate;
 
@@ -36,43 +35,60 @@ public class TasksDao {
           t.id = ?;
         """;
 
-    Map<String, Object> targetTask = jdbcTemplate.queryForMap(query, id);
-
-    return new Task(Integer.valueOf(targetTask.get("id").toString()),
-        targetTask.get("title").toString(), targetTask.get("status").toString(),
-        targetTask.get("priority").toString(),
-        Date.valueOf(targetTask.get("due_date").toString()).toLocalDate(),
-        Timestamp.valueOf(targetTask.get("created_at").toString()).toLocalDateTime(),
-        Timestamp.valueOf(targetTask.get("updated_at").toString()).toLocalDateTime());
+    return jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Task.class), id);
   }
 
-  public List<Task> findAll() {
-    String query = """
-        SELECT
-          t.id,
-          t.title,
-          t.status,
-          t.priority,
-          t.due_date,
-          t.created_at,
-          t.updated_at
-        FROM
-          tasks AS t;
-        """;
+  public List<Task> getFilteredSortedTasks(Map<String, String> queryParameterMap) {
+    String filter;
+    String sort;
 
-    List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
+    if (queryParameterMap == null) {
+      return findByStatusUnfinishedOrderByDueDateAsc();
+    } else {
+      filter = queryParameterMap.get("filter");
+      sort = queryParameterMap.get("sort");
+    }
 
-    return result.stream()
-        .map((Map<String, Object> row) -> new Task(Integer.valueOf(row.get("id").toString()),
-            row.get("title").toString(), row.get("status").toString(),
-            row.get("priority").toString(),
-            Date.valueOf(row.get("due_date").toString()).toLocalDate(),
-            Timestamp.valueOf(row.get("created_at").toString()).toLocalDateTime(),
-            Timestamp.valueOf(row.get("updated_at").toString()).toLocalDateTime()))
-        .toList();
+    if (filter.equals("未完了") && sort.equals("期限日")) {
+      return findByStatusUnfinishedOrderByDueDateAsc();
+    }
+
+    if (filter.equals("未完了") && sort.equals("優先度")) {
+      return findByStatusUnfinishedOrderByPriorityDescAndDueDateAsc();
+    }
+
+    if (filter.equals("未完了") && sort.equals("作成日")) {
+      return findByStatusUnfinishedOrderByCreatedAtAsc();
+    }
+
+    if (filter.equals("未削除") && sort.equals("期限日")) {
+      return findByStatusUndeletedOrderByDueDateAsc();
+    }
+
+    if (filter.equals("未削除") && sort.equals("優先度")) {
+      return findByStatusUndeletedOrderByPriorityDescAndDueDateAsc();
+    }
+
+    if (filter.equals("未削除") && sort.equals("作成日")) {
+      return findByStatusUndeletedOrderByCreatedAtAsc();
+    }
+
+    if (filter.equals("全て") && sort.equals("期限日")) {
+      return findAllOrderByDueDateAsc();
+    }
+
+    if (filter.equals("全て") && sort.equals("優先度")) {
+      return findAllOrderByPriorityDescAndDueDateAsc();
+    }
+
+    if (filter.equals("全て") && sort.equals("作成日")) {
+      return findAllOrderByCreatedAtAsc();
+    }
+
+    throw new IllegalArgumentException("filter と sort の組み合わせが正しくありません");
   }
 
-  public List<Task> findByStatusUnfinishedOrderByDueDateAsc() {
+  private List<Task> findByStatusUnfinishedOrderByDueDateAsc() {
     String query = """
         SELECT
           t.id,
@@ -87,30 +103,172 @@ public class TasksDao {
         WHERE
           t.status = '未完了'
         ORDER BY
-          t.due_date ASC;
+          t.due_date;
         """;
 
-    // rowMapper でのメソッド参照でも書けるのかな？
-    return jdbcTemplate.query(query, (rs, rowNum) -> new Task(
-        rs.getInt("id"),
-        rs.getString("title"),
-        rs.getString("status"),
-        rs.getString("priority"),
-        rs.getDate("due_date").toLocalDate(),
-        rs.getTimestamp("created_at").toLocalDateTime(),
-        rs.getTimestamp("updated_at").toLocalDateTime()
-    ));
+    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
+  }
 
-    //    List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
-    //
-    //    return result.stream()
-    //        .map((Map<String, Object> row) -> new Task(Integer.valueOf(row.get("id").toString()),
-    //            row.get("title").toString(), row.get("status").toString(),
-    //            row.get("priority").toString(),
-    //            Date.valueOf(row.get("due_date").toString()).toLocalDate(),
-    //            Timestamp.valueOf(row.get("created_at").toString()).toLocalDateTime(),
-    //            Timestamp.valueOf(row.get("updated_at").toString()).toLocalDateTime()))
-    //        .toList();
+  private List<Task> findByStatusUnfinishedOrderByPriorityDescAndDueDateAsc() {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.priority,
+          t.due_date,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        WHERE
+          t.status = '未完了'
+        ORDER BY
+          t.priority DESC, t.due_date;
+        """;
+
+    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
+  }
+
+  private List<Task> findByStatusUnfinishedOrderByCreatedAtAsc() {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.priority,
+          t.due_date,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        WHERE
+          t.status = '未完了'
+        ORDER BY
+          t.created_at;
+        """;
+
+    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
+  }
+
+  private List<Task> findByStatusUndeletedOrderByDueDateAsc() {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.priority,
+          t.due_date,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        WHERE
+          t.status != '削除済み'
+        ORDER BY
+          t.due_date;
+        """;
+
+    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
+  }
+
+  private List<Task> findByStatusUndeletedOrderByPriorityDescAndDueDateAsc() {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.priority,
+          t.due_date,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        WHERE
+          t.status != '削除済み'
+        ORDER BY
+          t.priority DESC, t.due_date;
+        """;
+
+    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
+  }
+
+  private List<Task> findByStatusUndeletedOrderByCreatedAtAsc() {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.priority,
+          t.due_date,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        WHERE
+          t.status != '削除済み'
+        ORDER BY
+          t.created_at;
+        """;
+
+    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
+  }
+
+  private List<Task> findAllOrderByDueDateAsc() {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.priority,
+          t.due_date,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        ORDER BY
+          t.due_date;
+        """;
+
+    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
+  }
+
+  private List<Task> findAllOrderByPriorityDescAndDueDateAsc() {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.priority,
+          t.due_date,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        ORDER BY
+          t.priority DESC, t.due_date;
+        """;
+
+    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
+  }
+
+  private List<Task> findAllOrderByCreatedAtAsc() {
+    String query = """
+        SELECT
+          t.id,
+          t.title,
+          t.status,
+          t.priority,
+          t.due_date,
+          t.created_at,
+          t.updated_at
+        FROM
+          tasks AS t
+        ORDER BY
+          t.created_at;
+        """;
+
+    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
   }
 
   public void create(Task task) {

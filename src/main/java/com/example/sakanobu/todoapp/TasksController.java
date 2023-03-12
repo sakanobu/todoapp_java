@@ -62,10 +62,13 @@ public class TasksController {
     Task inputTask =
         new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
 
-    queryParameterMap.ifPresentOrElse(q -> model.addAttribute("queryParameterMap", q),
-        () -> model.addAttribute("queryParameterMap", null));
-    // ToDo Task の一覧を持ってくる Dao は queryParameterMap を引数に取るようにする
-    model.addAttribute("targetTasks", tasksDao.findByStatusUnfinishedOrderByDueDateAsc());
+    queryParameterMap.ifPresentOrElse(q -> {
+      model.addAttribute("queryParameterMap", q);
+      model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(q));
+    }, () -> {
+      model.addAttribute("queryParameterMap", null);
+      model.addAttribute("targetTasks", tasksDao.getFilteredSortedTasks(null));
+    });
     model.addAttribute("task", inputTask);
 
     return "todos";
@@ -77,8 +80,7 @@ public class TasksController {
     Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
     Task inputTask =
         new Task(null, "", "", "", LocalDate.now(), LocalDateTime.now(), LocalDateTime.now());
-    // ToDo Task の一覧を持ってくる Dao は queryParameterMap を引数に取るようにする
-    List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
+    List<Task> targetTasks = tasksDao.getFilteredSortedTasks(queryParameterMap);
 
     model.addAttribute("queryParameterMap", queryParameterMap);
     model.addAttribute("task", inputTask);
@@ -94,8 +96,7 @@ public class TasksController {
     Map<String, String> queryParameterMap = Map.of("filter", "未完了", "sort", "期限日");
 
     if (bindingResult.hasErrors()) {
-      // ToDo Task の一覧を持ってくる Dao は queryParameterMap を引数に取るようにする
-      List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
+      List<Task> targetTasks = tasksDao.getFilteredSortedTasks(queryParameterMap);
 
       model.addAttribute("queryParameterMap", queryParameterMap);
       model.addAttribute("targetTasks", targetTasks);
@@ -122,8 +123,7 @@ public class TasksController {
     Map<String, String> queryParameterMap = Map.of("filter", filter, "sort", sort);
 
     if (bindingResult.hasErrors()) {
-      // ToDo Task の一覧を持ってくる Dao は queryParameterMap を引数に取るようにする
-      List<Task> targetTasks = tasksDao.findByStatusUnfinishedOrderByDueDateAsc();
+      List<Task> targetTasks = tasksDao.getFilteredSortedTasks(queryParameterMap);
 
       model.addAttribute("queryParameterMap", queryParameterMap);
       model.addAttribute("targetTasks", targetTasks);
