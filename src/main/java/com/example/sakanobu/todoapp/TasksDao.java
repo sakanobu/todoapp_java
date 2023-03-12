@@ -39,57 +39,28 @@ public class TasksDao {
   }
 
   public List<Task> getFilteredSortedTasks(Map<String, String> queryParameterMap) {
-    String filter;
-    String sort;
-
     if (queryParameterMap == null) {
-      return findByStatusUnfinishedOrderByDueDateAsc();
-    } else {
-      filter = queryParameterMap.get("filter");
-      sort = queryParameterMap.get("sort");
+      return jdbcTemplate.query("""
+          SELECT
+            t.id,
+            t.title,
+            t.status,
+            t.priority,
+            t.due_date,
+            t.created_at,
+            t.updated_at
+          FROM
+            tasks AS t
+          WHERE
+            t.status = '未完了'
+          ORDER BY
+            t.due_date;
+          """, new BeanPropertyRowMapper<>(Task.class));
     }
 
-    if (filter.equals("未完了") && sort.equals("期限日")) {
-      return findByStatusUnfinishedOrderByDueDateAsc();
-    }
+    StringBuilder queryStringBuilder = new StringBuilder();
 
-    if (filter.equals("未完了") && sort.equals("優先度")) {
-      return findByStatusUnfinishedOrderByPriorityDescAndDueDateAsc();
-    }
-
-    if (filter.equals("未完了") && sort.equals("作成日")) {
-      return findByStatusUnfinishedOrderByCreatedAtAsc();
-    }
-
-    if (filter.equals("未削除") && sort.equals("期限日")) {
-      return findByStatusUndeletedOrderByDueDateAsc();
-    }
-
-    if (filter.equals("未削除") && sort.equals("優先度")) {
-      return findByStatusUndeletedOrderByPriorityDescAndDueDateAsc();
-    }
-
-    if (filter.equals("未削除") && sort.equals("作成日")) {
-      return findByStatusUndeletedOrderByCreatedAtAsc();
-    }
-
-    if (filter.equals("全て") && sort.equals("期限日")) {
-      return findAllOrderByDueDateAsc();
-    }
-
-    if (filter.equals("全て") && sort.equals("優先度")) {
-      return findAllOrderByPriorityDescAndDueDateAsc();
-    }
-
-    if (filter.equals("全て") && sort.equals("作成日")) {
-      return findAllOrderByCreatedAtAsc();
-    }
-
-    throw new IllegalArgumentException("filter と sort の組み合わせが正しくありません");
-  }
-
-  private List<Task> findByStatusUnfinishedOrderByDueDateAsc() {
-    String query = """
+    queryStringBuilder.append("""
         SELECT
           t.id,
           t.title,
@@ -100,175 +71,38 @@ public class TasksDao {
           t.updated_at
         FROM
           tasks AS t
-        WHERE
-          t.status = '未完了'
-        ORDER BY
-          t.due_date;
-        """;
+        """
+    );
 
-    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
-  }
+    switch (queryParameterMap.get("filter")) {
+      case "未完了":
+        queryStringBuilder.append("WHERE t.status = '未完了' ");
+        break;
+      case "未削除":
+        queryStringBuilder.append("WHERE t.status != '削除済み' ");
+        break;
+      case "全て":
+        break;
+      default:
+        throw new IllegalArgumentException("filter に不正な値が指定されています");
+    }
 
-  private List<Task> findByStatusUnfinishedOrderByPriorityDescAndDueDateAsc() {
-    String query = """
-        SELECT
-          t.id,
-          t.title,
-          t.status,
-          t.priority,
-          t.due_date,
-          t.created_at,
-          t.updated_at
-        FROM
-          tasks AS t
-        WHERE
-          t.status = '未完了'
-        ORDER BY
-          t.priority DESC, t.due_date;
-        """;
+    switch (queryParameterMap.get("sort")) {
+      case "期限日":
+        queryStringBuilder.append("ORDER BY t.due_date;");
+        break;
+      case "優先度":
+        queryStringBuilder.append("ORDER BY t.priority DESC, t.due_date;");
+        break;
+      case "作成日":
+        queryStringBuilder.append("ORDER BY t.created_at;");
+        break;
+      default:
+        throw new IllegalArgumentException("sort に不正な値が指定されています");
+    }
 
-    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
-  }
-
-  private List<Task> findByStatusUnfinishedOrderByCreatedAtAsc() {
-    String query = """
-        SELECT
-          t.id,
-          t.title,
-          t.status,
-          t.priority,
-          t.due_date,
-          t.created_at,
-          t.updated_at
-        FROM
-          tasks AS t
-        WHERE
-          t.status = '未完了'
-        ORDER BY
-          t.created_at;
-        """;
-
-    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
-  }
-
-  private List<Task> findByStatusUndeletedOrderByDueDateAsc() {
-    String query = """
-        SELECT
-          t.id,
-          t.title,
-          t.status,
-          t.priority,
-          t.due_date,
-          t.created_at,
-          t.updated_at
-        FROM
-          tasks AS t
-        WHERE
-          t.status != '削除済み'
-        ORDER BY
-          t.due_date;
-        """;
-
-    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
-  }
-
-  private List<Task> findByStatusUndeletedOrderByPriorityDescAndDueDateAsc() {
-    String query = """
-        SELECT
-          t.id,
-          t.title,
-          t.status,
-          t.priority,
-          t.due_date,
-          t.created_at,
-          t.updated_at
-        FROM
-          tasks AS t
-        WHERE
-          t.status != '削除済み'
-        ORDER BY
-          t.priority DESC, t.due_date;
-        """;
-
-    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
-  }
-
-  private List<Task> findByStatusUndeletedOrderByCreatedAtAsc() {
-    String query = """
-        SELECT
-          t.id,
-          t.title,
-          t.status,
-          t.priority,
-          t.due_date,
-          t.created_at,
-          t.updated_at
-        FROM
-          tasks AS t
-        WHERE
-          t.status != '削除済み'
-        ORDER BY
-          t.created_at;
-        """;
-
-    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
-  }
-
-  private List<Task> findAllOrderByDueDateAsc() {
-    String query = """
-        SELECT
-          t.id,
-          t.title,
-          t.status,
-          t.priority,
-          t.due_date,
-          t.created_at,
-          t.updated_at
-        FROM
-          tasks AS t
-        ORDER BY
-          t.due_date;
-        """;
-
-    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
-  }
-
-  private List<Task> findAllOrderByPriorityDescAndDueDateAsc() {
-    String query = """
-        SELECT
-          t.id,
-          t.title,
-          t.status,
-          t.priority,
-          t.due_date,
-          t.created_at,
-          t.updated_at
-        FROM
-          tasks AS t
-        ORDER BY
-          t.priority DESC, t.due_date;
-        """;
-
-    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
-  }
-
-  private List<Task> findAllOrderByCreatedAtAsc() {
-    String query = """
-        SELECT
-          t.id,
-          t.title,
-          t.status,
-          t.priority,
-          t.due_date,
-          t.created_at,
-          t.updated_at
-        FROM
-          tasks AS t
-        ORDER BY
-          t.created_at;
-        """;
-
-    return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Task.class));
+    return jdbcTemplate.query(queryStringBuilder.toString(),
+        new BeanPropertyRowMapper<>(Task.class));
   }
 
   public void create(Task task) {
@@ -277,17 +111,6 @@ public class TasksDao {
         new SimpleJdbcInsert(jdbcTemplate).withTableName("tasks").usingGeneratedKeyColumns("id");
 
     insert.execute(param);
-  }
-
-  public void createByString(String title) {
-    String query = """
-        INSERT INTO
-          tasks (title)
-        VALUES
-          (?);
-        """;
-
-    jdbcTemplate.update(query, title);
   }
 
   public void update(Task task) {
