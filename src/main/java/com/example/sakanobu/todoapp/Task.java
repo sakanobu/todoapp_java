@@ -33,6 +33,17 @@ public class Task {
     this.updatedAt = updatedAt;
   }
 
+
+  /**
+   * 本日の日付が期限日まで残り1日以内かどうかを判定する.
+   *
+   * @return 本日の日付が期限日と一致する、もしくは、期限日の1日前と一致するのであれば true を返す
+   */
+  public boolean isDueDateWithinOneDay() {
+    return getDueDate().isEqual(LocalDate.now())
+        || getDueDate().isEqual(LocalDate.now().plusDays(1));
+  }
+
   public Integer getId() {
     return id;
   }
