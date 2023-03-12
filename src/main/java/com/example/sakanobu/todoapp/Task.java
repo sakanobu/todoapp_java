@@ -35,6 +35,15 @@ public class Task {
 
 
   /**
+   * 本日の日付が期限日を超えているかを判定する.
+   *
+   * @return 本日の日付が期限日を超えていれば true を返す
+   */
+  public boolean isDueDateOver() {
+    return getDueDate().isBefore(LocalDate.now());
+  }
+
+  /**
    * 本日の日付が期限日まで残り1日以内かどうかを判定する.
    *
    * @return 本日の日付が期限日と一致する、もしくは、期限日の1日前と一致するのであれば true を返す
