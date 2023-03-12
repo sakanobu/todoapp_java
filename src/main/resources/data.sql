@@ -17,5 +17,5 @@ VALUES
     ('買い物(靴)', '削除済み', '低', ADDDATE(CURDATE(), INTERVAL 90 DAY), ADDDATE(NOW(), INTERVAL 1 DAY)),
     ('期限日2日前', '未完了', '中', ADDDATE(CURDATE(), INTERVAL 2 DAY), NOW()),
     ('期限日1日前', '未完了', '中', ADDDATE(CURDATE(), INTERVAL 1 DAY), NOW()),
-    ('期限日超過', '未完了', '中', DATE_SUB(CURDATE(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 20 DAY)),
-    ('期限日より作成日が後', '未完了', '中', ADDDATE(CURDATE(), INTERVAL 1 DAY), ADDDATE(NOW(), INTERVAL 10 DAY));
+    ('期限日当日', '未完了', '中', CURDATE(), NOW()),
+    ('期限日超過', '未完了', '中', DATE_SUB(CURDATE(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 20 DAY));
