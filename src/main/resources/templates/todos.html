@@ -14,11 +14,10 @@
             <div style="color: red" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></div>
             <label for="title">ToDo名</label>
             <input th:field="*{title}" type="text">
-            <div th:if="${queryParameterMap != null}">
+            <span th:if="${queryParameterMap != null}">
                 <input th:name="filter" th:value="${queryParameterMap.get('filter')}" type="hidden">
                 <input th:name="sort" th:value="${queryParameterMap.get('sort')}" type="hidden">
-            </div>
-            <!-- if が true になることで div要素による下記 button の改行が発生してしまう -->
+            </span>
             <button type="submit">登録</button>
         </form>
 
