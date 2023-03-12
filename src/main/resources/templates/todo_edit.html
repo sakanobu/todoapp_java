@@ -33,7 +33,9 @@
             <input th:field="*{id}" type="hidden">
             <input th:field="*{createdAt}" type="hidden">
             <input th:field="*{updatedAt}" type="hidden">
-            <button type="submit">更新</button>
+            <div>
+                <button type="submit">更新</button>
+            </div>
         </form>
 
         <form th:action="@{/todos}" th:method="get">
